@@ -14,6 +14,7 @@ export class AuthController{
 
     @Post('/email-exists')
     @HttpCode(HttpStatus.OK)
+    @Header("Content-Type", "application/json")
     async emailExists(@Body() authMethod: AuthMethodDto): Promise<{userType: string}|false>{
         const userData = await this.authService.getUserData(authMethod)
         return userData ? {userType: userData.userClass.toLowerCase()} : false

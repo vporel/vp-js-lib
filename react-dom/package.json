@@ -25,10 +25,10 @@
   "description": "",
   "license": "MIT",
   "peerDependencies": {
-    "@mui/icons-material": "^6.4.6",
-    "@mui/material": "^6.4.6",
-    "formik": "^2.4.6",
-    "react": "^19.0.0"
+    "@mui/icons-material": "^6",
+    "@mui/material": "^6",
+    "formik": "^2",
+    "react": "^19"
   },
   "dependencies": {
     "@vporel/dom": "file:.yalc/@vporel/dom",
@@ -36,5 +36,11 @@
     "react-tag-autocomplete": "^7.5.0",
     "tsup": "^8.4.0",
     "uniqid": "^5.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.8",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "typescript": "latest"
   }
 }

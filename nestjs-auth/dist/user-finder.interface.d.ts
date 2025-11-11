@@ -2,17 +2,18 @@
  * @description Interface for the user finder service
  * @author Vivian NKOUANANG (https://github.com/vporel) <dev.vporel@gmail.com>
  */
+import { IUser } from "./user.interface";
 export interface IUserFinder {
     /**
      * @param userClass The name of the user class
      * @param id The id of the user to find
      */
-    findById(userClass: string, id: string): Promise<any | null>;
+    findById(userClass: string, id: string): Promise<IUser | null>;
     /**
      * @param email The email of the user to find
      */
     findByEmail(email: string): Promise<{
-        user: any;
+        user: IUser;
         userClass: string;
     } | null>;
     /**
@@ -22,6 +23,7 @@ export interface IUserFinder {
      */
     comparePasswords(password: string, hash: string): Promise<boolean>;
     /**
+     * Should have a definition if the email validation is enabled in the auth module options.
      * @param userClass The name of the user class
      * @param id The id of the user to find
      */

@@ -11,7 +11,7 @@ exports.getKeysDeepJoined = getKeysDeepJoined;
  * @description Merge two objects deeply, the source object will override the target object
  */
 function deepMerge(target, source, options) {
-    if (!source)
+    if (!source || !target)
         return target;
     const _target = target;
     const _source = source;

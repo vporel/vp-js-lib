@@ -8,7 +8,7 @@
  * @description Merge two objects deeply, the source object will override the target object
  */
 export function deepMerge<TargetType = any, SourceType = any>(target: TargetType, source: SourceType, options?: {onlyExistingKeys?: boolean}): TargetType{
-    if(!source) return target
+    if(!source || !target) return target
     const _target: any = target 
     const _source: any = source 
     for (let key in _source) {

@@ -1,12 +1,12 @@
-import { CanActivate, ExecutionContext, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Inject, Injectable, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { SKIP_AUTH_KEY } from "./auth.decorators";
 import { Reflector } from "@nestjs/core";
 import { AuthModuleOptions } from "./auth.module";
 import { IUserFinder } from "./user-finder.interface";
 import { ROLES_KEY } from "./roles.decorator";
-import { IUserRoles } from "./user-roles.interface";
 import { AuthPayload } from "./auth.service";
+import { IUser } from "./user.interface";
 
 
 /**
@@ -21,17 +21,18 @@ export class AuthGuard implements CanActivate{
     ){}
 
     async canActivate(context: ExecutionContext): Promise<boolean>{
-        const skipAuth = this.reflector.getAllAndOverride<Boolean>(SKIP_AUTH_KEY, [context.getHandler(), context.getClass()]);
+        const skipAuth = this.reflector.getAllAndOverride<boolean>(SKIP_AUTH_KEY, [context.getHandler(), context.getClass()]);
         if(skipAuth) return true
         const request = context.switchToHttp().getRequest()
-        const token = this.extractTokenFromHeader(request)
-        if(!token) throw new UnauthorizedException()
+        const token = this.extractTokenFromHeaders(request)
+        if(!token) throw new UnauthorizedException("no_token_provided")
         try{
             const payload: AuthPayload = await this.jwtService.verifyAsync(token)
             request.userClass = payload.userClass
             request.user = await this.userFinder.findById(payload.userClass, payload.userId)
+            if(!request.user) throw new InternalServerErrorException("The retrieved authenticated user is null or undefined")
         }catch{
-            throw new UnauthorizedException()
+            throw new UnauthorizedException("invalid_token")
         }
 
         //Roles
@@ -40,14 +41,14 @@ export class AuthGuard implements CanActivate{
         return this.verifyRoles(requiredRoles, request)
     }
 
-    private verifyRoles(requiredRoles: string[], request){
+    verifyRoles(requiredRoles: string[], request){
         if (!requiredRoles || requiredRoles.length == 0) return true;
         const { user } = request
-        const userRoles = (user as IUserRoles).getRoles()
+        const userRoles = (user as IUser).getRoles()
         return requiredRoles.some((role) => userRoles.includes(role))
     }
 
-    private extractTokenFromHeader(request): string|undefined{
+    extractTokenFromHeaders(request): string|undefined{
         const [type, token] = request.headers.authorization?.split(' ') ?? []
         return type === "Bearer" ? token : undefined
     }

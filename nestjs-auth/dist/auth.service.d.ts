@@ -12,8 +12,17 @@ export type AuthResult = {
     expiresIn: number;
     userType: string;
 };
+export declare class SigninDto extends AuthMethodDto {
+    password?: string;
+}
+export type AuthPayload = {
+    userId: string;
+    userClass: string;
+};
 /**
  * @author Vivian NKOUANANG (https://github.com/vporel) <dev.vporel@gmail.com>
+ *
+ * Some parameters in functions are not validated, this is because the validation either by the controller or by class-validator
  */
 export declare class AuthService {
     private readonly authOptions;
@@ -25,13 +34,7 @@ export declare class AuthService {
         user: any;
         userClass: string;
     } | null>;
-    /**
-     * @description Sign in with email only if the user has for example signed in with a third-party service
-     * @param email
-     * @returns
-     */
-    signInWithEmailOnly(email: string): Promise<AuthResult>;
-    signIn(email: string, password: string): Promise<AuthResult>;
+    signIn(signinData: SigninDto): Promise<AuthResult>;
     getAuthToken(user: any, userClass: string): Promise<AuthResult>;
-    getEmailFromAuthMethod(authMethod: AuthMethodDto): Promise<string>;
+    getEmailFromAuthMethod(authMethod: AuthMethodDto): Promise<string | undefined | null>;
 }

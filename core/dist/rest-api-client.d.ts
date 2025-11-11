@@ -13,6 +13,7 @@ export type RestApiResponse<DataType> = {
     data: {
         message: string;
         statusCode: number;
+        error?: Error;
     };
 };
 type QueryOptions<DataType> = {
@@ -32,7 +33,7 @@ type FileStruct = {
         type: string;
     } | Blob | undefined;
 };
-declare const RestApiClient: ({ host, Authorization }: {
+declare const RestApiClient: ({ host, Authorization, }: {
     host: string | {
         dev: string;
         prod: string;

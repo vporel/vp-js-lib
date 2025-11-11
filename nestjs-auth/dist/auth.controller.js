@@ -17,37 +17,20 @@ const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const auth_guard_1 = require("./auth.guard");
 const auth_decorators_1 = require("./auth.decorators");
-const class_validator_1 = require("class-validator");
-const nestjs_third_party_auth_1 = require("@vporel/nestjs-third-party-auth");
-class SigninDto extends auth_service_1.AuthMethodDto {
-    password;
-}
-__decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.ValidateIf)(({ methodName }) => methodName == "email"),
-    __metadata("design:type", String)
-], SigninDto.prototype, "password", void 0);
 /**
  * @author Vivian NKOUANANG (https://github.com/vporel) <dev.vporel@gmail.com>
  */
 let AuthController = class AuthController {
     authService;
-    thirdPartyAuthService;
-    constructor(authService, thirdPartyAuthService) {
+    constructor(authService) {
         this.authService = authService;
-        this.thirdPartyAuthService = thirdPartyAuthService;
     }
     async emailExists(authMethod) {
-        const email = await this.getEmailFromAuthMethod(authMethod);
-        const userData = await this.authService.getUserData(email);
+        const userData = await this.authService.getUserData(authMethod);
         return userData ? { userType: userData.userClass.toLowerCase() } : false;
     }
     async signIn(data) {
-        if (data.methodName == "email")
-            return this.authService.signIn(data.email, data.password);
-        else
-            return await this.authService.signInWithEmailOnly(await this.getEmailFromAuthMethod(data));
+        return await this.authService.signIn(data);
     }
     async extendToken(userClass, user) {
         return await this.authService.getAuthToken(userClass, user); //Reauthenticate
@@ -55,23 +38,15 @@ let AuthController = class AuthController {
     getCurrentUser(userClass, user) {
         return {
             user,
-            userType: userClass
+            userType: userClass.toLowerCase()
         };
-    }
-    async getEmailFromAuthMethod(authMethod) {
-        if (authMethod.methodName == "email")
-            return authMethod.email;
-        else {
-            if (!this.thirdPartyAuthService)
-                throw new common_1.InternalServerErrorException("Third-party authentication not enabled");
-            return (await this.thirdPartyAuthService.getUserInfos(authMethod.methodName, authMethod.accessToken)).email;
-        }
     }
 };
 exports.AuthController = AuthController;
 __decorate([
     (0, common_1.Post)('/email-exists'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, common_1.Header)("Content-Type", "application/json"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [auth_service_1.AuthMethodDto]),
@@ -82,7 +57,7 @@ __decorate([
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [SigninDto]),
+    __metadata("design:paramtypes", [auth_service_1.SigninDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "signIn", null);
 __decorate([
@@ -106,7 +81,5 @@ __decorate([
 ], AuthController.prototype, "getCurrentUser", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)("auth"),
-    __param(1, (0, common_1.Optional)()),
-    __metadata("design:paramtypes", [auth_service_1.AuthService,
-        nestjs_third_party_auth_1.ThirdPartyAuthService])
+    __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthController);

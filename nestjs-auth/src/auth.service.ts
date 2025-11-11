@@ -64,24 +64,12 @@ export class AuthService{
 
     async signIn(signinData: SigninDto): Promise<AuthResult>{
         const email = await this.getEmailFromAuthMethod(signinData)
+        if(signinData.methodName != "email" && !email) throw new BadRequestException("invalid_access_token: The third-party service access token is invalid or missing")
         const password = signinData.password
         const result = await this.userFinder.findByEmail(email)
         if(!result || !result.user) throw new NotFoundException("user_not_found: No user found with this email")
         const {user, userClass} = result
         if(signinData.methodName == "email" && !(await this.userFinder.comparePasswords(password, user.password))) throw new UnauthorizedException("incorrect_password: The password is incorrect")
-        return await this.getAuthToken(user, userClass)
-    }
-
-    /**
-     * @description Sign in with email only if the user has for example signed in with a third-party service
-     * @param email 
-     * @returns 
-     */
-    async signInWithEmailOnly(email: string): Promise<AuthResult>{
-        if(!email) throw new BadRequestException("email_required: The email is missing")
-        const result = await this.userFinder.findByEmail(email)
-        if(!result || !result.user) throw new NotFoundException("user_not_found: No user found with this email")
-        const {user, userClass} = result
         return await this.getAuthToken(user, userClass)
     }
 
@@ -94,11 +82,12 @@ export class AuthService{
         }
     }
 
-    async getEmailFromAuthMethod(authMethod: AuthMethodDto): Promise<string>{
+    async getEmailFromAuthMethod(authMethod: AuthMethodDto): Promise<string|undefined|null>{
         if(authMethod.methodName == "email") return authMethod.email
         else{
             if(!this.thirdPartyAuthService) throw new InternalServerErrorException("Third-party authentication not enabled")
-            return (await this.thirdPartyAuthService.getUserInfos(authMethod.methodName, authMethod.accessToken)).email
+            const userInfos = await this.thirdPartyAuthService.getUserInfos(authMethod.methodName, authMethod.accessToken)
+            return userInfos ? userInfos.email : null
         }
     }
 }

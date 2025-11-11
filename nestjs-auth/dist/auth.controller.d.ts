@@ -1,15 +1,10 @@
-import { AuthMethodDto, AuthResult, AuthService } from "./auth.service";
-import { ThirdPartyAuthService } from "@vporel/nestjs-third-party-auth";
-declare class SigninDto extends AuthMethodDto {
-    password?: string;
-}
+import { AuthMethodDto, AuthResult, AuthService, SigninDto } from "./auth.service";
 /**
  * @author Vivian NKOUANANG (https://github.com/vporel) <dev.vporel@gmail.com>
  */
 export declare class AuthController {
     private authService;
-    private thirdPartyAuthService;
-    constructor(authService: AuthService, thirdPartyAuthService: ThirdPartyAuthService);
+    constructor(authService: AuthService);
     emailExists(authMethod: AuthMethodDto): Promise<{
         userType: string;
     } | false>;
@@ -19,6 +14,4 @@ export declare class AuthController {
         user: any;
         userType: string;
     };
-    getEmailFromAuthMethod(authMethod: AuthMethodDto): Promise<string>;
 }
-export {};

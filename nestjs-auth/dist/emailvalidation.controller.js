@@ -12,29 +12,24 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EmailValidationController = exports.EmailAndCodeDto = exports.EmailDto = void 0;
+exports.EmailValidationController = exports.CodeDto = void 0;
 const common_1 = require("@nestjs/common");
 const class_validator_1 = require("class-validator");
 const nestjs_mailer_1 = require("@vporel/nestjs-mailer");
 const handlebars_1 = require("@vporel/handlebars");
 const auth_decorators_1 = require("./auth.decorators");
 const auth_guard_1 = require("./auth.guard");
-class EmailDto {
-    email;
-}
-exports.EmailDto = EmailDto;
-__decorate([
-    (0, class_validator_1.IsEmail)(),
-    __metadata("design:type", String)
-], EmailDto.prototype, "email", void 0);
-class EmailAndCodeDto extends EmailDto {
+const emailvalidation_service_1 = require("./emailvalidation.service");
+class CodeDto {
     code;
 }
-exports.EmailAndCodeDto = EmailAndCodeDto;
+exports.CodeDto = CodeDto;
 __decorate([
     (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.Min)(100000),
+    (0, class_validator_1.Max)(999999),
     __metadata("design:type", Number)
-], EmailAndCodeDto.prototype, "code", void 0);
+], CodeDto.prototype, "code", void 0);
 /**
  * @author Vivian NKOUANANG (https://github.com/vporel) <dev.vporel@gmail.com>
  */
@@ -42,79 +37,54 @@ let EmailValidationController = class EmailValidationController {
     mailerService;
     authOptions;
     userFinder;
-    SAVED_CODES = [];
-    constructor(mailerService, authOptions, userFinder) {
+    emailValidationService;
+    constructor(mailerService, authOptions, userFinder, emailValidationService) {
         this.mailerService = mailerService;
         this.authOptions = authOptions;
         this.userFinder = userFinder;
+        this.emailValidationService = emailValidationService;
     }
-    async sendEmailValidationCode({ email }) {
+    async sendEmailValidationCode(user) {
         if (this.authOptions.emailValidation?.byPass)
             return true;
-        const code = this.generateRandomCode();
-        this.saveCode(email, code);
-        if (await this.mailerService.sendEmail(email, this.authOptions.emailValidation?.emailSubject, (0, handlebars_1.compileTemplate)(this.authOptions.emailValidation?.emailTemplatePath, { code })))
-            return true;
-        else
+        const code = await this.emailValidationService.generateAndSaveCode(user.email);
+        const sent = await this.mailerService.sendEmail(user.email, this.authOptions.emailValidation?.emailSubject, (0, handlebars_1.compileTemplate)(this.authOptions.emailValidation?.emailTemplatePath, { code }));
+        if (!sent)
             throw new common_1.HttpException("Mailer error", common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+        return true;
     }
-    async validateCode({ email, code }) {
-        if (this.authOptions.emailValidation?.byPass || this.testCode(email, code)) {
-            return true;
+    async validateCode({ code }, userClass, user) {
+        if (this.authOptions.emailValidation?.byPass || await this.emailValidationService.testCode(user.email, code)) {
+            return await this.userFinder.markEmailAsValidated(userClass, user._id);
         }
         else
             throw new common_1.HttpException("Wrong code", common_1.HttpStatus.UNPROCESSABLE_ENTITY);
-    }
-    async validateCodeWithUser({ email, code }, userClass, user) {
-        if (this.authOptions.emailValidation?.byPass || this.testCode(email, code)) {
-            return await this.userFinder.markEmailAsValidated(userClass, user["_id"]);
-        }
-        else
-            throw new common_1.HttpException("Wrong code", common_1.HttpStatus.UNPROCESSABLE_ENTITY);
-    }
-    generateRandomCode() {
-        const min = 100000;
-        const max = 999999;
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-    saveCode(email, code) {
-        this.SAVED_CODES.push({ email, code });
-    }
-    testCode(email, code) {
-        return !!this.SAVED_CODES.find(el => el.email == email && el.code == code);
     }
 };
 exports.EmailValidationController = EmailValidationController;
 __decorate([
     (0, common_1.Post)('/send-email-validation-code'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    __param(0, (0, auth_decorators_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [EmailDto]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], EmailValidationController.prototype, "sendEmailValidationCode", null);
 __decorate([
     (0, common_1.Post)('/validate-email-code'),
-    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [EmailAndCodeDto]),
-    __metadata("design:returntype", Promise)
-], EmailValidationController.prototype, "validateCode", null);
-__decorate([
-    (0, common_1.Post)('/validate-email-code-with-user'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, auth_decorators_1.CurrentUserClass)()),
     __param(2, (0, auth_decorators_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [EmailAndCodeDto, Object, Object]),
+    __metadata("design:paramtypes", [CodeDto, Object, Object]),
     __metadata("design:returntype", Promise)
-], EmailValidationController.prototype, "validateCodeWithUser", null);
+], EmailValidationController.prototype, "validateCode", null);
 exports.EmailValidationController = EmailValidationController = __decorate([
     (0, common_1.Controller)("auth"),
     __param(1, (0, common_1.Inject)('AUTH_OPTIONS')),
     __param(2, (0, common_1.Inject)('USER_FINDER')),
-    __metadata("design:paramtypes", [nestjs_mailer_1.MailerService, Object, Object])
+    __metadata("design:paramtypes", [nestjs_mailer_1.MailerService, Object, Object, emailvalidation_service_1.EmailValidationService])
 ], EmailValidationController);

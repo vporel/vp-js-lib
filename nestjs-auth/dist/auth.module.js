@@ -16,6 +16,7 @@ const emailvalidation_controller_1 = require("./emailvalidation.controller");
 const nestjs_third_party_auth_1 = require("@vporel/nestjs-third-party-auth");
 const auth_guard_1 = require("./auth.guard");
 const secured_properties_guard_1 = require("./secured-properties.guard");
+const emailvalidation_service_1 = require("./emailvalidation.service");
 let AuthModule = AuthModule_1 = class AuthModule {
     static forRoot(options) {
         const imports = [
@@ -32,18 +33,23 @@ let AuthModule = AuthModule_1 = class AuthModule {
         const controllers = [auth_controller_1.AuthController];
         if (options.emailValidation)
             controllers.push(emailvalidation_controller_1.EmailValidationController);
+        const providers = [
+            { provide: 'AUTH_OPTIONS', useValue: options },
+            auth_service_1.AuthService,
+            auth_guard_1.AuthGuard,
+            secured_properties_guard_1.SecuredPropertiesGuard,
+            emailvalidation_service_1.EmailValidationService
+        ];
+        if (typeof options.userFinder == 'function')
+            providers.push({ provide: 'USER_FINDER', useClass: options.userFinder });
+        else
+            providers.push({ provide: 'USER_FINDER', useValue: options.userFinder });
         return {
             module: AuthModule_1,
             imports,
-            providers: [
-                { provide: 'AUTH_OPTIONS', useValue: options },
-                { provide: 'USER_FINDER', useClass: options.userFinder },
-                auth_service_1.AuthService,
-                auth_guard_1.AuthGuard,
-                secured_properties_guard_1.SecuredPropertiesGuard,
-            ],
+            providers,
             controllers,
-            exports: ['AUTH_OPTIONS', 'USER_FINDER', auth_guard_1.AuthGuard, secured_properties_guard_1.SecuredPropertiesGuard]
+            exports: ['AUTH_OPTIONS', 'USER_FINDER', auth_service_1.AuthService, auth_guard_1.AuthGuard, secured_properties_guard_1.SecuredPropertiesGuard, emailvalidation_service_1.EmailValidationService]
         };
     }
 };

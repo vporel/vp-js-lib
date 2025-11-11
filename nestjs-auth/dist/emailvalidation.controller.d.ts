@@ -1,10 +1,9 @@
 import { MailerService } from "@vporel/nestjs-mailer";
 import { AuthModuleOptions } from "./auth.module";
 import { IUserFinder } from "./user-finder.interface";
-export declare class EmailDto {
-    email: string;
-}
-export declare class EmailAndCodeDto extends EmailDto {
+import { IUser } from "./user.interface";
+import { EmailValidationService } from "./emailvalidation.service";
+export declare class CodeDto {
     code: number;
 }
 /**
@@ -14,12 +13,8 @@ export declare class EmailValidationController {
     private mailerService;
     private readonly authOptions;
     private userFinder;
-    private SAVED_CODES;
-    constructor(mailerService: MailerService, authOptions: AuthModuleOptions, userFinder: IUserFinder);
-    sendEmailValidationCode({ email }: EmailDto): Promise<boolean>;
-    validateCode({ email, code }: EmailAndCodeDto): Promise<boolean>;
-    validateCodeWithUser({ email, code }: EmailAndCodeDto, userClass: any, user: any): Promise<boolean>;
-    private generateRandomCode;
-    private saveCode;
-    private testCode;
+    private emailValidationService;
+    constructor(mailerService: MailerService, authOptions: AuthModuleOptions, userFinder: IUserFinder, emailValidationService: EmailValidationService);
+    sendEmailValidationCode(user: IUser): Promise<boolean>;
+    validateCode({ code }: CodeDto, userClass: any, user: IUser): Promise<boolean>;
 }

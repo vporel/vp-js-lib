@@ -37,15 +37,16 @@ let AuthGuard = class AuthGuard {
         const request = context.switchToHttp().getRequest();
         const token = this.extractTokenFromHeader(request);
         if (!token)
-            throw new common_1.UnauthorizedException();
+            throw new common_1.UnauthorizedException("no_token_provided");
         try {
             const payload = await this.jwtService.verifyAsync(token);
-            const id = payload.sub;
             request.userClass = payload.userClass;
-            request.user = await this.userFinder.findById(payload.userClass, id);
+            request.user = await this.userFinder.findById(payload.userClass, payload.userId);
+            if (!request.user)
+                throw new common_1.InternalServerErrorException("The retrieved authenticated user is null or undefined");
         }
         catch {
-            throw new common_1.UnauthorizedException();
+            throw new common_1.UnauthorizedException("invalid_token");
         }
         //Roles
         const requiredRoles = this.reflector.getAllAndOverride(roles_decorator_1.ROLES_KEY, [context.getHandler(), context.getClass()]);

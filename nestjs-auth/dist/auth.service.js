@@ -12,7 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AuthService = exports.AuthMethodDto = void 0;
+exports.AuthService = exports.SigninDto = exports.AuthMethodDto = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const class_validator_1 = require("class-validator");
@@ -40,8 +40,20 @@ __decorate([
     (0, class_validator_1.ValidateIf)(({ methodName }) => methodName == "google"),
     __metadata("design:type", String)
 ], AuthMethodDto.prototype, "accessToken", void 0);
+class SigninDto extends AuthMethodDto {
+    password;
+}
+exports.SigninDto = SigninDto;
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.ValidateIf)(({ methodName }) => methodName == "email"),
+    __metadata("design:type", String)
+], SigninDto.prototype, "password", void 0);
 /**
  * @author Vivian NKOUANANG (https://github.com/vporel) <dev.vporel@gmail.com>
+ *
+ * Some parameters in functions are not validated, this is because the validation either by the controller or by class-validator
  */
 let AuthService = class AuthService {
     authOptions;
@@ -55,42 +67,28 @@ let AuthService = class AuthService {
         this.thirdPartyAuthService = thirdPartyAuthService;
     }
     async getUserData(emailOrAuthMethod) {
-        let email = "";
+        let email;
         if (typeof emailOrAuthMethod == "string")
             email = emailOrAuthMethod;
         else
             email = await this.getEmailFromAuthMethod(emailOrAuthMethod);
         return await this.userFinder.findByEmail(email);
     }
-    /**
-     * @description Sign in with email only if the user has for example signed in with a third-party service
-     * @param email
-     * @returns
-     */
-    async signInWithEmailOnly(email) {
-        if (!email)
-            throw new common_1.BadRequestException("email_required: The email is missing");
+    async signIn(signinData) {
+        const email = await this.getEmailFromAuthMethod(signinData);
+        if (signinData.methodName != "email" && !email)
+            throw new common_1.BadRequestException("invalid_access_token: The third-party service access token is invalid or missing");
+        const password = signinData.password;
         const result = await this.userFinder.findByEmail(email);
         if (!result || !result.user)
             throw new common_1.NotFoundException("user_not_found: No user found with this email");
         const { user, userClass } = result;
-        return await this.getAuthToken(user, userClass);
-    }
-    async signIn(email, password) {
-        if (!email)
-            throw new common_1.BadRequestException("email_required: The the email is missing");
-        if (!password)
-            throw new common_1.BadRequestException("password_required: The password is missing");
-        const result = await this.userFinder.findByEmail(email);
-        if (!result || !result.user)
-            throw new common_1.NotFoundException("user_not_found: No user found with this email");
-        const { user, userClass } = result;
-        if (!(await this.userFinder.comparePasswords(password, user.password)))
+        if (signinData.methodName == "email" && !(await this.userFinder.comparePasswords(password, user.password)))
             throw new common_1.UnauthorizedException("incorrect_password: The password is incorrect");
         return await this.getAuthToken(user, userClass);
     }
     async getAuthToken(user, userClass) {
-        const payload = { sub: user["_id"], userName: user.userName, userClass };
+        const payload = { userId: user["_id"], userClass };
         return {
             accessToken: await this.jwtService.signAsync(payload, { secret: this.authOptions.jwtSecretKey }),
             expiresIn: parseInt(this.authOptions.jwtExpirationTime), //In seconds,
@@ -103,7 +101,8 @@ let AuthService = class AuthService {
         else {
             if (!this.thirdPartyAuthService)
                 throw new common_1.InternalServerErrorException("Third-party authentication not enabled");
-            return (await this.thirdPartyAuthService.getUserInfos(authMethod.methodName, authMethod.accessToken)).email;
+            const userInfos = await this.thirdPartyAuthService.getUserInfos(authMethod.methodName, authMethod.accessToken);
+            return userInfos ? userInfos.email : null;
         }
     }
 };
