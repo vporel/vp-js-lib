@@ -1,6 +1,6 @@
-import { DynamicModule, Provider } from '@nestjs/common';
-import { ThirdPartyAuthModuleOptions } from '@vporel/nestjs-third-party-auth';
-import { IUserFinder } from './user-finder.interface';
+import { DynamicModule, Provider } from "@nestjs/common";
+import { ThirdPartyAuthModuleOptions } from "@vporel/nestjs-third-party-auth";
+import { IUserFinder } from "./user-finder.interface";
 export type AuthModuleOptions = {
     jwtSecretKey: string;
     jwtExpirationTime: string;

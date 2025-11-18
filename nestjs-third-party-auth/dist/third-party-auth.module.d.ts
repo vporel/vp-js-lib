@@ -12,10 +12,10 @@ export type ThirdPartyAuthModuleOptions = {
 export declare class ThirdPartyAuthModule {
     static register(options: ThirdPartyAuthModuleOptions): {
         module: typeof ThirdPartyAuthModule;
-        providers: (typeof ThirdPartyAuthService | typeof GoogleService | {
+        providers: (typeof GoogleService | typeof ThirdPartyAuthService | {
             provide: string;
             useValue: ApisConfig;
         })[];
-        exports: (typeof ThirdPartyAuthService | typeof GoogleService)[];
+        exports: (typeof GoogleService | typeof ThirdPartyAuthService)[];
     };
 }

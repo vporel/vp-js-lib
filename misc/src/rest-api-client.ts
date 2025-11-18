@@ -1,11 +1,10 @@
-"use client";
 /**
- * Basic functions for a server request (GET, POST, POST WITH FILES, PATCH, PATCH WITH FILES, DELETE)
+ * Basic functions to call an api (GET, POST, POST WITH FILES, PATCH, PATCH WITH FILES, DELETE)
  * @author Vivian NKOUANANG (https://github.com/vporel) <dev.vporel@gmail.com>
  */
 
 /**
- * The data is the error content if ok == false
+ * The data are the error content if ok == false
  */
 export type RestApiResponse<DataType> =
 	| {
@@ -22,7 +21,7 @@ type QueryOptions<DataType> = {
 	Authorization?: string;
 };
 
-async function manageResponse<DataType>(response: Response, queryOptions?: QueryOptions<DataType>) {
+async function handleResponse<DataType>(response: Response, queryOptions?: QueryOptions<DataType>) {
 	let responseData = await response.json();
 	//Transform the data
 	if (
@@ -53,11 +52,11 @@ async function serverQuery<DataType>(
 	};
 	if (options?.Authorization) requestOptions.headers.Authorization = options.Authorization;
 	try {
-		return await manageResponse<DataType>(await fetch(url, requestOptions), options);
+		return await handleResponse<DataType>(await fetch(url, requestOptions), options);
 	} catch (error) {
 		return {
 			ok: false,
-			data: { message: error.message, statusCode: 0, error: error },
+			data: { message: (error as any).message, statusCode: 0, error: error as any },
 		};
 	}
 }
@@ -98,7 +97,7 @@ async function serverQueryWithFiles<DataType>(
 		accept: "application/json",
 	};
 	if (options?.Authorization) requestOptions.headers.Authorization = options.Authorization;
-	return await manageResponse<DataType>(await fetch(url, requestOptions), options);
+	return await handleResponse<DataType>(await fetch(url, requestOptions), options);
 }
 
 const RestApiClient = ({

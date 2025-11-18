@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatValidationErrors = void 0;
+exports.formatValidationErrors = formatValidationErrors;
 /**
  * Format validation errors
  * Example: { "name": "must be a string", "contact.email": "Email already exists" }
@@ -22,4 +22,3 @@ function formatValidationErrors(validationErrors) {
     validationErrors.forEach(addErrorGroup);
     return errors;
 }
-exports.formatValidationErrors = formatValidationErrors;

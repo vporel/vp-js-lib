@@ -35,7 +35,7 @@ let AuthGuard = class AuthGuard {
         if (skipAuth)
             return true;
         const request = context.switchToHttp().getRequest();
-        const token = this.extractTokenFromHeader(request);
+        const token = this.extractTokenFromHeaders(request);
         if (!token)
             throw new common_1.UnauthorizedException("no_token_provided");
         try {
@@ -59,7 +59,7 @@ let AuthGuard = class AuthGuard {
         const userRoles = user.getRoles();
         return requiredRoles.some((role) => userRoles.includes(role));
     }
-    extractTokenFromHeader(request) {
+    extractTokenFromHeaders(request) {
         const [type, token] = request.headers.authorization?.split(' ') ?? [];
         return type === "Bearer" ? token : undefined;
     }

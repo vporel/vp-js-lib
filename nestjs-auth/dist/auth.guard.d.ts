@@ -11,6 +11,6 @@ export declare class AuthGuard implements CanActivate {
     private userFinder;
     constructor(reflector: Reflector, jwtService: JwtService, userFinder: IUserFinder);
     canActivate(context: ExecutionContext): Promise<boolean>;
-    private verifyRoles;
-    private extractTokenFromHeader;
+    verifyRoles(requiredRoles: string[], request: any): boolean;
+    extractTokenFromHeaders(request: any): string | undefined;
 }

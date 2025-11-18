@@ -1,28 +1,32 @@
 {
-  "name": "@vporel/nestjs-mailer",
-  "version": "0.1.0",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "keywords": [
-    "vporel",
-    "typescript",
-    "vp-lib",
-    "nestjs",
-    "mailer"
-  ],
-  "author": "Vivian NKOUANANG",
-  "scripts": {
-    "build": "tsc"
-  },
-  "description": "",
-  "license": "MIT",
-  "dependencies": {
-    "node-mailjet": "^6.0.6",
-    "nodemailer": "^6.10.0"
-  },
-  "peerDependencies": {
-    "@nestjs/common": "^10.0.0",
-		"@nestjs/testing": "^10.0.0"
-  }
+	"name": "@vporel/nestjs-mailer",
+	"version": "0.1.0",
+	"main": "dist/index.js",
+	"module": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"keywords": [
+		"vporel",
+		"typescript",
+		"vp-lib",
+		"nestjs",
+		"mailer"
+	],
+	"author": "Vivian NKOUANANG",
+	"scripts": {
+		"build": "tsc"
+	},
+	"description": "",
+	"license": "MIT",
+	"dependencies": {
+		"node-mailjet": "^6.0.6",
+		"nodemailer": "^7.0.5"
+	},
+	"peerDependencies": {
+		"@nestjs/common": "^11.0.0",
+		"@nestjs/testing": "^11.0.0"
+	},
+	"devDependencies": {
+		"@types/node": "^24.10.1",
+		"typescript": "^5.9.3"
+	}
 }

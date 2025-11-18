@@ -1,6 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.transformObjectToUpdate = exports.getModelName = exports.compareEntities = exports.getEntityId = void 0;
+exports.getEntityId = getEntityId;
+exports.compareEntities = compareEntities;
+exports.getModelName = getModelName;
+exports.transformObjectToUpdate = transformObjectToUpdate;
 /**
  * @author Vivian NKOUANANG (https://github.com/vporel) <dev.vporel@gmail.com>
  * @description This file contains some helpers for mongoose
@@ -16,7 +19,6 @@ function getEntityId(obj) {
             ? obj._id.toString()
             : obj);
 }
-exports.getEntityId = getEntityId;
 /**
  * Compare two database entities
  */
@@ -25,11 +27,9 @@ function compareEntities(objOrId1, objOrId2) {
     const obj2Id = getEntityId(objOrId2);
     return obj1Id == obj2Id;
 }
-exports.compareEntities = compareEntities;
 function getModelName(instance) {
     return instance.constructor.modelName;
 }
-exports.getModelName = getModelName;
 /**
  * Transform an object to an object that can be used to update a document in the database
  *
@@ -50,4 +50,3 @@ function transformObjectToUpdate(obj) {
     }
     return newObj;
 }
-exports.transformObjectToUpdate = transformObjectToUpdate;

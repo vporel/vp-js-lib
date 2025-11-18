@@ -17,7 +17,7 @@ const common_1 = require("@nestjs/common");
 const node_mailjet_1 = require("node-mailjet");
 const nodemailer_1 = require("nodemailer");
 const mailer_module_1 = require("./mailer.module");
-let MailerService = exports.MailerService = class MailerService {
+let MailerService = class MailerService {
     options;
     constructor(options) {
         this.options = options;
@@ -89,6 +89,7 @@ let MailerService = exports.MailerService = class MailerService {
         });
     }
 };
+exports.MailerService = MailerService;
 exports.MailerService = MailerService = __decorate([
     __param(0, (0, common_1.Inject)(mailer_module_1.MAILER_OPTIONS)),
     __metadata("design:paramtypes", [Object])

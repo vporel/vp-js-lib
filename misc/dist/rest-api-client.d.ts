@@ -1,9 +1,9 @@
 /**
- * Basic functions for a server request (GET, POST, POST WITH FILES, PATCH, PATCH WITH FILES, DELETE)
+ * Basic functions to call an api (GET, POST, POST WITH FILES, PATCH, PATCH WITH FILES, DELETE)
  * @author Vivian NKOUANANG (https://github.com/vporel) <dev.vporel@gmail.com>
  */
 /**
- * The data is the error content if ok == false
+ * The data are the error content if ok == false
  */
 export type RestApiResponse<DataType> = {
     ok: true;

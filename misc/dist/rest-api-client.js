@@ -1,7 +1,10 @@
-"use client";
 "use strict";
+/**
+ * Basic functions to call an api (GET, POST, POST WITH FILES, PATCH, PATCH WITH FILES, DELETE)
+ * @author Vivian NKOUANANG (https://github.com/vporel) <dev.vporel@gmail.com>
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
-async function manageResponse(response, queryOptions) {
+async function handleResponse(response, queryOptions) {
     let responseData = await response.json();
     //Transform the data
     if (response.ok &&
@@ -26,7 +29,7 @@ async function serverQuery(method, url, data, options) {
     if (options?.Authorization)
         requestOptions.headers.Authorization = options.Authorization;
     try {
-        return await manageResponse(await fetch(url, requestOptions), options);
+        return await handleResponse(await fetch(url, requestOptions), options);
     }
     catch (error) {
         return {
@@ -61,10 +64,10 @@ async function serverQueryWithFiles(method, url, data, files, options) {
     };
     if (options?.Authorization)
         requestOptions.headers.Authorization = options.Authorization;
-    return await manageResponse(await fetch(url, requestOptions), options);
+    return await handleResponse(await fetch(url, requestOptions), options);
 }
 const RestApiClient = ({ host, Authorization, }) => {
-    let _host = typeof host == "string" ? host : process.env.NODE_ENV == "development" ? host.dev : host.prod;
+    let _host = typeof host == "string" ? host : process.env.NODE_ENV === "development" ? host.dev : host.prod;
     function addHostToUrl(url) {
         return _host + (url.startsWith("/") || _host.endsWith("/") ? url : "/" + url);
     }

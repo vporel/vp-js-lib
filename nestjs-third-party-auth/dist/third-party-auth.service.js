@@ -19,7 +19,7 @@ const third_party_google_service_1 = require("./third-party.google.service");
  * @description Service for third-party authentication
  * @author Vivian NKOUANANG (https://github.com/vporel) <dev.vporel@gmail.com>
  */
-let ThirdPartyAuthService = exports.ThirdPartyAuthService = class ThirdPartyAuthService {
+let ThirdPartyAuthService = class ThirdPartyAuthService {
     apis;
     services;
     constructor(apis, googleService) {
@@ -46,6 +46,7 @@ let ThirdPartyAuthService = exports.ThirdPartyAuthService = class ThirdPartyAuth
         return this.services[name];
     }
 };
+exports.ThirdPartyAuthService = ThirdPartyAuthService;
 exports.ThirdPartyAuthService = ThirdPartyAuthService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, common_1.Inject)("THIRD_PARTY_APIS_CONFIG")),

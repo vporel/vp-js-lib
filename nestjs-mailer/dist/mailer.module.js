@@ -11,7 +11,7 @@ exports.MailerModule = exports.MAILER_OPTIONS = void 0;
 const common_1 = require("@nestjs/common");
 const mailer_service_1 = require("./mailer.service");
 exports.MAILER_OPTIONS = "MAILER_OPTIONS";
-let MailerModule = exports.MailerModule = MailerModule_1 = class MailerModule {
+let MailerModule = MailerModule_1 = class MailerModule {
     static forRoot(options) {
         if (options.apiService == "gmail" && !options.gmail)
             throw new Error("The configuration is missing for the service 'gmail'");
@@ -30,7 +30,8 @@ let MailerModule = exports.MailerModule = MailerModule_1 = class MailerModule {
         };
     }
 };
+exports.MailerModule = MailerModule;
 exports.MailerModule = MailerModule = MailerModule_1 = __decorate([
-    (0, common_1.Module)({}),
-    (0, common_1.Global)()
+    (0, common_1.Global)(),
+    (0, common_1.Module)({})
 ], MailerModule);

@@ -1,29 +1,29 @@
 {
-	"name": "@vporel/nestjs-misc",
+	"name": "@vporel/misc",
 	"version": "0.1.0",
 	"main": "dist/index.js",
 	"module": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"keywords": [
 		"vporel",
-		"typescript",
 		"vp-lib",
-		"nestjs",
-		"misc"
+		"misc",
+		"typescript"
 	],
 	"author": "Vivian NKOUANANG",
 	"scripts": {
 		"build": "tsc"
 	},
-	"description": "",
 	"license": "MIT",
-	"peerDependencies": {
-		"@nestjs/common": "^11.0.0",
-		"@nestjs/testing": "^11.0.0",
-		"mongoose": "^8.20.0"
+	"description": "",
+	"dependencies": {
+		"date-fns": "^4.1.0",
+		"typescript": "^5.7.3"
 	},
 	"devDependencies": {
-		"@types/node": "^24.10.1",
-		"typescript": "^5.9.3"
+		"@types/node": "^22.10.10"
+	},
+	"publishConfig": {
+		"access": "public"
 	}
 }

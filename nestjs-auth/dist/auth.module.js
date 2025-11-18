@@ -9,14 +9,14 @@ var AuthModule_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthModule = void 0;
 const common_1 = require("@nestjs/common");
-const auth_controller_1 = require("./auth.controller");
 const jwt_1 = require("@nestjs/jwt");
+const nestjs_third_party_auth_1 = require("@vporel/nestjs-third-party-auth");
+const auth_controller_1 = require("./auth.controller");
+const auth_guard_1 = require("./auth.guard");
 const auth_service_1 = require("./auth.service");
 const emailvalidation_controller_1 = require("./emailvalidation.controller");
-const nestjs_third_party_auth_1 = require("@vporel/nestjs-third-party-auth");
-const auth_guard_1 = require("./auth.guard");
-const secured_properties_guard_1 = require("./secured-properties.guard");
 const emailvalidation_service_1 = require("./emailvalidation.service");
+const secured_properties_guard_1 = require("./secured-properties.guard");
 let AuthModule = AuthModule_1 = class AuthModule {
     static forRoot(options) {
         const imports = [
@@ -24,8 +24,8 @@ let AuthModule = AuthModule_1 = class AuthModule {
                 global: true,
                 useFactory: async () => ({
                     secret: options.jwtSecretKey,
-                    signOptions: { expiresIn: options.jwtExpirationTime },
-                })
+                    signOptions: { expiresIn: parseInt(options.jwtExpirationTime, 10) },
+                }),
             }),
         ];
         if (options.thirdPartyAuthOptions)
@@ -34,22 +34,29 @@ let AuthModule = AuthModule_1 = class AuthModule {
         if (options.emailValidation)
             controllers.push(emailvalidation_controller_1.EmailValidationController);
         const providers = [
-            { provide: 'AUTH_OPTIONS', useValue: options },
+            { provide: "AUTH_OPTIONS", useValue: options },
             auth_service_1.AuthService,
             auth_guard_1.AuthGuard,
             secured_properties_guard_1.SecuredPropertiesGuard,
-            emailvalidation_service_1.EmailValidationService
+            emailvalidation_service_1.EmailValidationService,
         ];
-        if (typeof options.userFinder == 'function')
-            providers.push({ provide: 'USER_FINDER', useClass: options.userFinder });
+        if (typeof options.userFinder == "function")
+            providers.push({ provide: "USER_FINDER", useClass: options.userFinder });
         else
-            providers.push({ provide: 'USER_FINDER', useValue: options.userFinder });
+            providers.push({ provide: "USER_FINDER", useValue: options.userFinder });
         return {
             module: AuthModule_1,
             imports,
             providers,
             controllers,
-            exports: ['AUTH_OPTIONS', 'USER_FINDER', auth_service_1.AuthService, auth_guard_1.AuthGuard, secured_properties_guard_1.SecuredPropertiesGuard, emailvalidation_service_1.EmailValidationService]
+            exports: [
+                "AUTH_OPTIONS",
+                "USER_FINDER",
+                auth_service_1.AuthService,
+                auth_guard_1.AuthGuard,
+                secured_properties_guard_1.SecuredPropertiesGuard,
+                emailvalidation_service_1.EmailValidationService,
+            ],
         };
     }
 };

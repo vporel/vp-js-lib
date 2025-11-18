@@ -11,7 +11,7 @@ exports.ThirdPartyAuthModule = void 0;
 const common_1 = require("@nestjs/common");
 const third_party_google_service_1 = require("./third-party.google.service");
 const third_party_auth_service_1 = require("./third-party-auth.service");
-let ThirdPartyAuthModule = exports.ThirdPartyAuthModule = ThirdPartyAuthModule_1 = class ThirdPartyAuthModule {
+let ThirdPartyAuthModule = ThirdPartyAuthModule_1 = class ThirdPartyAuthModule {
     static register(options) {
         return {
             module: ThirdPartyAuthModule_1,
@@ -27,6 +27,7 @@ let ThirdPartyAuthModule = exports.ThirdPartyAuthModule = ThirdPartyAuthModule_1
         };
     }
 };
+exports.ThirdPartyAuthModule = ThirdPartyAuthModule;
 exports.ThirdPartyAuthModule = ThirdPartyAuthModule = ThirdPartyAuthModule_1 = __decorate([
     (0, common_1.Global)(),
     (0, common_1.Module)({})

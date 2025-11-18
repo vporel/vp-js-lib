@@ -1,40 +1,41 @@
 {
-  "name": "@vporel/nestjs-auth",
-  "version": "0.1.0",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "keywords": [
-    "vporel",
-    "typescript",
-    "vp-lib",
-    "nestjs",
-    "auth"
-  ],
-  "author": "Vivian NKOUANANG",
-  "scripts": {
-    "build": "tsc"
-  },
-  "description": "",
-  "license": "MIT",
-  "dependencies": {
-    "@types/supertest": "^6.0.3",
-    "@vporel/core": "file:.yalc/@vporel/core",
-    "@vporel/handlebars": "file:.yalc/@vporel/handlebars",
-    "@vporel/nestjs-mailer": "file:.yalc/@vporel/nestjs-mailer",
-    "@vporel/nestjs-third-party-auth": "file:.yalc/@vporel/nestjs-third-party-auth",
-    "class-validator": "^0.14.1",
-    "jest-mock-extended": "^4.0.0-beta1"
-  },
-  "peerDependencies": {
-    "@nestjs/common": "^10.0.0",
-    "@nestjs/jwt": "^11.0.0",
-    "@nestjs/platform-express": "^10.4.0",
-    "@nestjs/testing": "^10.0.0"
-  },
-  "devDependencies": {
-    "@types/jest": "^29.5.14",
-    "supertest": "^7.1.1",
-    "ts-jest": "^29.3.4"
-  }
+	"name": "@vporel/nestjs-auth",
+	"version": "0.1.0",
+	"main": "dist/index.js",
+	"module": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"keywords": [
+		"vporel",
+		"typescript",
+		"vp-lib",
+		"nestjs",
+		"auth"
+	],
+	"author": "Vivian NKOUANANG",
+	"scripts": {
+		"build": "tsc"
+	},
+	"description": "",
+	"license": "MIT",
+	"dependencies": {
+		"@types/supertest": "^6.0.3",
+		"@vporel/core": "file:.yalc/@vporel/core",
+		"@vporel/handlebars": "file:.yalc/@vporel/handlebars",
+		"@vporel/nestjs-mailer": "file:.yalc/@vporel/nestjs-mailer",
+		"@vporel/nestjs-third-party-auth": "file:.yalc/@vporel/nestjs-third-party-auth",
+		"class-validator": "^0.14.2",
+		"jest-mock-extended": "^4.0.0-beta1"
+	},
+	"peerDependencies": {
+		"@nestjs/common": "^11.0.0",
+		"@nestjs/jwt": "^11.0.1",
+		"@nestjs/platform-express": "^11.1.9",
+		"@nestjs/testing": "^11.0.0"
+	},
+	"devDependencies": {
+		"@types/jest": "^29.5.14",
+		"supertest": "^7.1.1",
+		"ts-jest": "^29.3.4",
+		"typescript": "^5.9.3"
+	}
 }

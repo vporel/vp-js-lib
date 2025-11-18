@@ -1,26 +1,30 @@
 {
-  "name": "@vporel/nestjs-third-party-auth",
-  "version": "0.1.0",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "keywords": [
-    "vporel",
-    "typescript",
-    "vp-lib",
-    "nestjs",
-    "auth",
-    "third-party",
-    "third-party-auth"
-  ],
-  "author": "Vivian NKOUANANG",
-  "scripts": {
-    "build": "tsc"
-  },
-  "description": "",
-  "license": "MIT",
-  "peerDependencies": {
-    "@nestjs/common": "^11.0.10",
-    "@nestjs/testing": "^11.0.10"
-  }
+	"name": "@vporel/nestjs-third-party-auth",
+	"version": "0.1.0",
+	"main": "dist/index.js",
+	"module": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"keywords": [
+		"vporel",
+		"typescript",
+		"vp-lib",
+		"nestjs",
+		"auth",
+		"third-party",
+		"third-party-auth"
+	],
+	"author": "Vivian NKOUANANG",
+	"scripts": {
+		"build": "tsc"
+	},
+	"description": "",
+	"license": "MIT",
+	"peerDependencies": {
+		"@nestjs/common": "^11.0.0",
+		"@nestjs/testing": "^11.0.0"
+	},
+	"devDependencies": {
+		"@types/node": "^24.10.1",
+		"typescript": "^5.9.3"
+	}
 }

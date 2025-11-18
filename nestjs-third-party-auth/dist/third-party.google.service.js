@@ -19,7 +19,7 @@ const third_party_service_abs_1 = require("./third-party.service.abs");
  * @description Service using Google API to authenticate users
  * @author Vivian NKOUANANG (https://github.com/vporel) <dev.vporel@gmail.com>
  */
-let GoogleService = exports.GoogleService = class GoogleService extends third_party_service_abs_1.ThirdPartyService {
+let GoogleService = class GoogleService extends third_party_service_abs_1.ThirdPartyService {
     apis;
     constructor(apis) {
         super();
@@ -43,6 +43,7 @@ let GoogleService = exports.GoogleService = class GoogleService extends third_pa
         return await response.json();
     }
 };
+exports.GoogleService = GoogleService;
 exports.GoogleService = GoogleService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, common_1.Inject)((0, common_1.forwardRef)(() => "THIRD_PARTY_APIS_CONFIG"))),

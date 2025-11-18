@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.moveUploadedFile = void 0;
+exports.moveUploadedFile = moveUploadedFile;
 /**
  * @author Vivian NKOUANANG (https://github.com/vporel) <dev.vporel@gmail.com>
  */
@@ -27,4 +27,3 @@ function moveUploadedFile(file, baseName, destFolder) {
         (0, fs_1.writeFileSync)(destPath, file.buffer);
     return newFileName;
 }
-exports.moveUploadedFile = moveUploadedFile;
