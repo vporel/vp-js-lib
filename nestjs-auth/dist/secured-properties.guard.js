@@ -15,8 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SecuredPropertiesGuard = void 0;
 const common_1 = require("@nestjs/common");
 const core_1 = require("@nestjs/core");
+const misc_1 = require("@vporel/misc");
 const secured_properties_decorator_1 = require("./secured-properties.decorator");
-const core_2 = require("@vporel/core");
 /**
  * Can be used to force the user to provide a password to update some properties
  */
@@ -28,13 +28,16 @@ let SecuredPropertiesGuard = class SecuredPropertiesGuard {
         this.userFinder = userFinder;
     }
     async canActivate(context) {
-        const securedProperties = this.reflector.getAllAndOverride(secured_properties_decorator_1.SECURED_PROPERTIES_KEY, [context.getHandler(), context.getClass()]);
+        const securedProperties = this.reflector.getAllAndOverride(secured_properties_decorator_1.SECURED_PROPERTIES_KEY, [
+            context.getHandler(),
+            context.getClass(),
+        ]);
         const request = context.switchToHttp().getRequest();
         if (securedProperties.length == 0)
             return true;
         let testPassword = false;
         for (let securedProp of securedProperties) {
-            if ((0, core_2.getKeysDeepJoined)(request.body).includes(securedProp)) {
+            if ((0, misc_1.getKeysDeepJoined)(request.body).includes(securedProp)) {
                 testPassword = true;
                 break;
             }
@@ -52,6 +55,6 @@ let SecuredPropertiesGuard = class SecuredPropertiesGuard {
 exports.SecuredPropertiesGuard = SecuredPropertiesGuard;
 exports.SecuredPropertiesGuard = SecuredPropertiesGuard = __decorate([
     (0, common_1.Injectable)(),
-    __param(1, (0, common_1.Inject)('USER_FINDER')),
+    __param(1, (0, common_1.Inject)("USER_FINDER")),
     __metadata("design:paramtypes", [core_1.Reflector, Object])
 ], SecuredPropertiesGuard);

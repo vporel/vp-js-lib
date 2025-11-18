@@ -19,8 +19,8 @@
 	"license": "MIT",
 	"dependencies": {
 		"@types/supertest": "^6.0.3",
-		"@vporel/core": "file:.yalc/@vporel/core",
 		"@vporel/handlebars": "file:.yalc/@vporel/handlebars",
+		"@vporel/misc": "file:.yalc/@vporel/misc",
 		"@vporel/nestjs-mailer": "file:.yalc/@vporel/nestjs-mailer",
 		"@vporel/nestjs-third-party-auth": "file:.yalc/@vporel/nestjs-third-party-auth",
 		"class-validator": "^0.14.2",

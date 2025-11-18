@@ -20,6 +20,10 @@
       "signature": "c479019241769f01f4ca017955056ece",
       "file": true,
       "replaced": "file:../nestjs-third-party-auth"
+    },
+    "@vporel/misc": {
+      "signature": "4503ce9e002d495668349531c6647f2d",
+      "file": true
     }
   }
 }
