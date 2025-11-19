@@ -35,21 +35,23 @@ let SecuredPropertiesGuard = class SecuredPropertiesGuard {
         const request = context.switchToHttp().getRequest();
         if (securedProperties.length == 0)
             return true;
-        let testPassword = false;
+        let passwordTestNeeded = false;
         for (let securedProp of securedProperties) {
             if ((0, misc_1.getKeysDeepJoined)(request.body).includes(securedProp)) {
-                testPassword = true;
+                passwordTestNeeded = true;
                 break;
             }
         }
-        if (!testPassword)
+        if (!passwordTestNeeded)
             return true;
         if (!request.body.password || request.body.password == "")
-            return false;
+            throw new common_1.ForbiddenException("password_required_for_secured_properties: " + securedProperties.join(", "));
         let testOk = await this.userFinder.comparePasswords(request.body.password, request.user?.password);
+        if (!testOk)
+            throw new common_1.ForbiddenException("invalid_password_for_secured_properties: " + securedProperties.join(", "));
         //Remove the password from the request
         delete request.body.password;
-        return testOk;
+        return true;
     }
 };
 exports.SecuredPropertiesGuard = SecuredPropertiesGuard;

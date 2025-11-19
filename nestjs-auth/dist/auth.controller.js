@@ -14,9 +14,9 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
-const auth_service_1 = require("./auth.service");
-const auth_guard_1 = require("./auth.guard");
 const auth_decorators_1 = require("./auth.decorators");
+const auth_guard_1 = require("./auth.guard");
+const auth_service_1 = require("./auth.service");
 /**
  * @author Vivian NKOUANANG (https://github.com/vporel) <dev.vporel@gmail.com>
  */
@@ -25,35 +25,22 @@ let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    async emailExists(authMethod) {
-        const userData = await this.authService.getUserData(authMethod);
-        return userData ? { userType: userData.userClass.toLowerCase() } : false;
-    }
     async signIn(data) {
         return await this.authService.signIn(data);
     }
-    async extendToken(userClass, user) {
-        return await this.authService.getAuthToken(userClass, user); //Reauthenticate
+    async extendToken(user, userClass) {
+        return await this.authService.getAuthToken(user, userClass); //Reauthenticate
     }
     getCurrentUser(userClass, user) {
         return {
             user,
-            userType: userClass.toLowerCase()
+            userType: userClass.toLowerCase(),
         };
     }
 };
 exports.AuthController = AuthController;
 __decorate([
-    (0, common_1.Post)('/email-exists'),
-    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    (0, common_1.Header)("Content-Type", "application/json"),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [auth_service_1.AuthMethodDto]),
-    __metadata("design:returntype", Promise)
-], AuthController.prototype, "emailExists", null);
-__decorate([
-    (0, common_1.Post)('/signin'),
+    (0, common_1.Post)("/signin"),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -61,11 +48,11 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "signIn", null);
 __decorate([
-    (0, common_1.Post)('/token/extend'),
+    (0, common_1.Post)("/token/extend"),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
-    __param(0, (0, auth_decorators_1.CurrentUserClass)()),
-    __param(1, (0, auth_decorators_1.CurrentUser)()),
+    __param(0, (0, auth_decorators_1.CurrentUser)()),
+    __param(1, (0, auth_decorators_1.CurrentUserClass)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)

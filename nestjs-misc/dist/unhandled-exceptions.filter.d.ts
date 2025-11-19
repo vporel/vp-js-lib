@@ -1,5 +1,5 @@
-import { ExceptionFilter, ArgumentsHost } from '@nestjs/common';
-import { HttpAdapterHost } from '@nestjs/core';
+import { ArgumentsHost, ExceptionFilter } from "@nestjs/common";
+import { HttpAdapterHost } from "@nestjs/core";
 /**
  * @description This class is used to catch all unhandled exceptions and return a proper response to the client
  */

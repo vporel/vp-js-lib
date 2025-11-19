@@ -25,10 +25,14 @@ let UnhandledExceptionsFilter = class UnhandledExceptionsFilter {
         // constructor method, thus we should resolve it here.
         const { httpAdapter } = this.httpAdapterHost;
         const ctx = host.switchToHttp();
-        let message = exception["response"] ? (exception["response"].message ? exception["response"].message : exception["response"]) : exception.message;
+        let message = exception["response"]
+            ? exception["response"].message
+                ? exception["response"].message
+                : exception["response"]
+            : exception.message;
         let statusCode = exception instanceof common_1.HttpException ? exception.getStatus() : common_1.HttpStatus.INTERNAL_SERVER_ERROR;
         console.log(exception);
-        if ((exception instanceof mongoose_1.MongooseError) && exception.constructor.name == "ValidationError") {
+        if (exception instanceof mongoose_1.MongooseError && exception.constructor.name == "ValidationError") {
             const errors = {};
             for (const prop in exception["errors"])
                 errors[prop] = exception["errors"][prop].properties.message;
